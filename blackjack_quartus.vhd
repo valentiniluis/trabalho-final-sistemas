@@ -85,7 +85,7 @@ begin
                 array_cartas(valor) <= 1 + (valor mod 13);
             end loop;
 
-        elsif (key(0)'event and key(0)='0' and game_over='0') then
+        elsif (key(0)'event and key(0)='0') then
 
             if (estado_atual=nova_carta_dealer or estado_atual=nova_carta_player) then
                 if (sw(3)='0') then
