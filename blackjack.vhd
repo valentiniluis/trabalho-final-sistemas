@@ -16,7 +16,6 @@ end blackjack;
 
 architecture behav of blackjack is
     signal soma_player, soma_dealer, as_player, as_dealer : integer := 0;
-    signal game_over : std_logic;
     signal inicio_jogo : std_logic := '1';
 
     type estado is (inicio, nova_carta_player, nova_carta_dealer, escolha_player, escolha_dealer, decidir_vencedor, empatou, perdeu, venceu);
@@ -53,7 +52,6 @@ begin
         if (start='1') then
             estado_atual <= inicio;
             inicio_jogo <= '1';
-            game_over <= '0';
             soma_player <= 0;
             soma_dealer <= 0;
             aux_as_dealer := 0;
@@ -69,7 +67,7 @@ begin
                 array_cartas(valor) <= 1 + (valor mod 13);
             end loop;
 
-        elsif (clk'event and clk='1' and game_over='0') then
+        elsif (clk'event and clk='1') then
 
             if (estado_atual=nova_carta_dealer or estado_atual=nova_carta_player) then
                 if (random_cards='0') then
@@ -215,21 +213,15 @@ begin
                     end if;
                     
                 when others =>
-                    game_over <= '1';
-
             end case;
         end if;
 
         if (aux_soma_player=21 or (aux_soma_dealer>21 and aux_as_dealer=0)) then
             win <= '1';
             estado_atual <= venceu;
-            game_over <= '1';
-
         elsif (aux_soma_dealer=21 or (aux_soma_player>21 and aux_as_player=0)) then
             lose <= '1';
             estado_atual <= perdeu;
-            game_over <= '1';
-
         elsif (estado_atual=decidir_vencedor) then
             if (aux_soma_player>aux_soma_dealer) then
                 win <= '1';
@@ -238,7 +230,6 @@ begin
             else
                 tie <= '1';
             end if;
-            game_over <= '1';
         end if;
 
 

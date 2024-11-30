@@ -30,7 +30,6 @@ end blackjack;
 
 architecture behav of blackjack is
     signal soma_player, soma_dealer, as_player, as_dealer : integer := 0;
-    signal game_over : std_logic := '0';
     signal inicio_jogo : std_logic := '1';
 
     type estado is (inicio, nova_carta_player, nova_carta_dealer, escolha_player, escolha_dealer, decidir_vencedor, empatou, perdeu, venceu);
@@ -69,7 +68,6 @@ begin
         if (sw(0)='1') then
             estado_atual <= inicio;
             inicio_jogo <= '1';
-            game_over <= '0';
             soma_player <= 0;
             soma_dealer <= 0;
             aux_as_dealer := 0;
@@ -214,7 +212,6 @@ begin
                     end if;
                     
                 when others =>
-                    game_over <= '1';
 
             end case;
         end if;
@@ -222,12 +219,10 @@ begin
         if (aux_soma_player=21 or (aux_soma_dealer>21 and aux_as_dealer=0)) then
             ledr(0) <= '1';
             estado_atual <= venceu;
-            --game_over <= '1';
 
         elsif (aux_soma_dealer=21 or (aux_soma_player>21 and aux_as_player=0)) then
             ledr(1) <= '1';
             estado_atual <= perdeu;
-            --game_over <= '1';
 
         elsif (estado_atual=decidir_vencedor) then
             if (aux_soma_player>aux_soma_dealer) then
@@ -237,7 +232,7 @@ begin
             else
                 ledr(2) <= '1';
             end if;
-            --game_over <= '1';
+
         end if;
 
 
